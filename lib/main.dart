@@ -1,4 +1,11 @@
+import 'dart:convert';
+
+import 'package:flag/flag.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import 'avisosScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,46 +14,20 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: '#FMlaLlagosta2024'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -55,71 +36,194 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final String apiUrl = 'https://admin.lallagosta.lafesta.cat/api/v1/es/'; // URL base de la API
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  Future<void> _fetchDataAndNavigate(BuildContext context, String endpoint) async {
+    final String encodedEndpoint = Uri.encodeComponent(endpoint);
+    final String url = '$apiUrl$encodedEndpoint'; // Construye la URL completa
+
+    print('Fetching data from URL: $url'); // Imprime la URL para depuración
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      print('Response status: ${response.statusCode}'); // Imprime el código de estado
+      print('Response body: ${response.body}'); // Imprime el cuerpo de la respuesta
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        // Usa Navigator.push para ir a DataScreen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AvisosScreen(
+              title: endpoint,
+              data: data,
+            ),
+          ),
+        );
+        // Cierra el Drawer después de la navegación
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al cargar los datos. Código de estado: ${response.statusCode}. URL: $url'),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final headerHeight = screenHeight * 0.1;
+    final textSize = screenWidth * 0.05;
+
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+        backgroundColor: Colors.orange,
+        title: kIsWeb
+            ? Text(widget.title)
+            : Center(child: Text(widget.title)),
+        actions: <Widget>[
+          IconButton(
+            icon: Flag.fromCode(
+              FlagsCode.ES_CT,
+              height: 30,
+              width: 30,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            onPressed: () {
+              _onCatalunyaFlagPressed();
+            },
+          ),
+          IconButton(
+            icon: Flag.fromCode(
+              FlagsCode.ES,
+              height: 30,
+              width: 30,
+            ),
+            onPressed: () {
+              _onSpainFlagPressed();
+            },
+          ),
+        ],
+      ),
+      drawer: kIsWeb
+          ? null
+          : Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.fromLTRB(14, 40, 14, 20),
+              height: headerHeight,
+              color: Colors.orange,
+              child: Center(
+                child: Text(
+                  '#FMlaLlagosta2024',
+                  style: TextStyle(
+                    fontSize: textSize,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+            /*ListTile(
+              title: const Text('Avisos'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'avisos');
+              },
+            ),*/
+            ListTile(
+              title: const Text('Prefiesta'),
+              onTap: () async {
+                // TODO - REVISAR PORQUE PETA ESTA PETICIÓN
+                await _fetchDataAndNavigate(context, 'actividades/dia/previos');
+              },
+            ),
+            ListTile(
+              title: const Text('Viernes 06'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'actividades/dia/2');
+              },
+            ),
+            ListTile(
+              title: const Text('Sábado 07'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'Sabado%2007');
+              },
+            ),
+            ListTile(
+              title: const Text('Domingo 08'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'Domingo%2008');
+              },
+            ),
+            ListTile(
+              title: const Text('Lunes 09'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'Lunes%2009');
+              },
+            ),
+            ListTile(
+              title: const Text('Deportes'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'Deportes');
+              },
+            ),
+            ListTile(
+              title: const Text('Puntos lila'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'Puntos lila');
+              },
+            ),
+            ListTile(
+              title: const Text('Saluda'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'Saluda');
+              },
+            ),
+            ListTile(
+              title: const Text('Categorías'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'Categorias');
+              },
+            ),
+            ListTile(
+              title: const Text('Mapa'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'Mapa');
+              },
+            ),
+            ListTile(
+              title: const Text('Favoritos'),
+              onTap: () async {
+                await _fetchDataAndNavigate(context, 'Favoritos');
+              },
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: Center(
+        child: kIsWeb
+            ? Image.network('https://lallagosta.lafesta.cat/img/portada.jpg')
+            : Image.network('https://lallagosta.lafesta.cat/img/cartel.jpg'),
+      ),
     );
+  }
+
+  void _onCatalunyaFlagPressed() {
+    print('Catalunya flag pressed');
+  }
+
+  void _onSpainFlagPressed() {
+    print('Spain flag pressed');
   }
 }
