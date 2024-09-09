@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'components/appBarComponent.dart';
-import 'components/drawerComponent.dart';
+import 'components/app_bar_component.dart';
+import 'components/drawer_component.dart';
+import 'language_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: '#FMlaLlagosta2024'),
+      home: MyHomePage(
+        title: LanguageManager.currentConstants['appTitle']!,
+      ),
     );
   }
 }
@@ -35,8 +38,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final String apiUrl = 'https://admin.lallagosta.lafesta.cat/api/v1/es/';
 
-  // TODO - PENSAR SI SE PUEDE DEJAR ESTE MÉTODO AQUÍ Y ACCEDER A ÉL DESDE EL listItemPage.dart
-  void _handleDrawerItemSelected(String selectedItem) {
+  void _handleDrawerItemSelected(String selectedItem, BuildContext context) {
     if (kDebugMode) {
       print('Selected item: $selectedItem');
     }
