@@ -21,4 +21,16 @@ class LanguageManager {
         return SpanishConstants.constants;
     }
   }
+
+  static void changeLanguage(String languageCode) {
+    // Lógica para cambiar el idioma
+    // Actualizar `currentConstants` con las nuevas traducciones
+    // Ejemplo:
+    if (languageCode == 'ca') {
+      currentConstants['appTitle'] = 'El Títol de la Meva App'; // Ejemplo de traducción al catalán
+    } else if (languageCode == 'es') {
+      currentConstants['appTitle'] = 'El Título de Mi App'; // Ejemplo de traducción al español
+    }
+    // Actualizar otras constantes si es necesario
+  }
 }

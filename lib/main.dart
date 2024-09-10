@@ -36,18 +36,43 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late String title;
+
+  @override
+  void initState() {
+    super.initState();
+    title = widget.title;
+  }
+
   final String apiUrl = 'https://admin.lallagosta.lafesta.cat/api/v1/es/';
 
   void _handleDrawerItemSelected(String selectedItem, BuildContext context) {
-    if (kDebugMode) {
-      print('Selected item: $selectedItem');
-    }
+    setState(() {
+      switch (selectedItem) {
+        case 'Catalan':
+          LanguageManager.changeLanguage('ca');
+          break;
+        case 'Spanish':
+          LanguageManager.changeLanguage('es');
+          break;
+      }
+
+      title = LanguageManager.currentConstants['appTitle']!;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarComponent(title: widget.title),
+      appBar: AppBarComponent(
+        title: title,
+        onLanguageChanged: (languageCode) {
+          setState(() {
+            LanguageManager.changeLanguage(languageCode);
+            title = LanguageManager.currentConstants['appTitle']!;
+          });
+        },
+      ),
       drawer: kIsWeb
           ? null
           : DrawerComponent(onItemSelected: _handleDrawerItemSelected),

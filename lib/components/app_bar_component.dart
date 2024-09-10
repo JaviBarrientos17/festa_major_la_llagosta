@@ -6,8 +6,13 @@ import '../language_manager.dart';
 
 class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final ValueChanged<String> onLanguageChanged;
 
-  const AppBarComponent({super.key, required this.title});
+  const AppBarComponent({
+    super.key,
+    required this.title,
+    required this.onLanguageChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +47,13 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   void _onCatalunyaFlagPressed(BuildContext context) {
     LanguageManager.setLanguage(Language.catalan);
     _showLanguageChangedSnackBar(context);
+    onLanguageChanged('ca');
   }
 
   void _onSpainFlagPressed(BuildContext context) {
     LanguageManager.setLanguage(Language.spanish);
     _showLanguageChangedSnackBar(context);
+    onLanguageChanged('es');
   }
 
   void _showLanguageChangedSnackBar(BuildContext context) {

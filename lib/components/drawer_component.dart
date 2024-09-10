@@ -1,9 +1,10 @@
-import 'package:festa_major_la_llagosta/pages/list_tile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:festa_major_la_llagosta/pages/avisos_page.dart';
+import 'package:festa_major_la_llagosta/pages/prefiesta_page.dart';
 import 'package:festa_major_la_llagosta/language_manager.dart';
 
 class DrawerComponent extends StatelessWidget {
-  final Function(String, BuildContext) onItemSelected;
+  final void Function(String, BuildContext) onItemSelected;
 
   const DrawerComponent({super.key, required this.onItemSelected});
 
@@ -60,13 +61,29 @@ class DrawerComponent extends StatelessWidget {
       title: Text(title),
       onTap: () {
         onItemSelected(title, context);
+
+        Widget targetPage;
+
+        switch (title) {
+          case "Avisos":
+            targetPage = AvisosPage(title: title, index: index);
+            break;
+          case "Prefiesta":
+          case "Prefesta":
+            targetPage = PrefiestaPage(title: title, index: index);
+            break;
+          default:
+            targetPage = Scaffold(
+              appBar: AppBar(title: const Text('Unknown Page')),
+              body: const Center(child: Text('Page not found')),
+            );
+            break;
+        }
+
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ListTilePage(
-              title: title,
-              index: index,
-            ),
+            builder: (context) => targetPage,
           ),
         );
       },
