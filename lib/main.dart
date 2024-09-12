@@ -78,9 +78,16 @@ class _MyHomePageState extends State<MyHomePage> {
           : DrawerComponent(onItemSelected: _handleDrawerItemSelected),
       body: Center(
         child: kIsWeb
-            ? Image.network('https://lallagosta.lafesta.cat/img/portada.jpg')
-            // TODO - HACER QUE LA IMG EN FORMATO MÓVIL OCUPE TODO EL ANCHO DE LA PANTALLA SIN DEJAR MARGENES POR LOS LADOS
-            : Image.network('https://lallagosta.lafesta.cat/img/cartel.jpg'),
+            ? Image.network(
+                'https://lallagosta.lafesta.cat/img/portada.jpg',
+                width: double.infinity,
+                fit: BoxFit.cover,
+              )
+            : Image.network(
+                'https://lallagosta.lafesta.cat/img/cartel.jpg',
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
       ),
     );
   }
