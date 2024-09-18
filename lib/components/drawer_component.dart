@@ -1,7 +1,13 @@
+import 'package:festa_major_la_llagosta/pages/day03_page.dart';
+import 'package:festa_major_la_llagosta/pages/day04_page.dart';
 import 'package:flutter/material.dart';
 import 'package:festa_major_la_llagosta/pages/avisos_page.dart';
 import 'package:festa_major_la_llagosta/pages/prefiesta_page.dart';
 import 'package:festa_major_la_llagosta/language_manager.dart';
+
+import '../pages/day01_page.dart';
+import '../pages/day02_page.dart';
+import '../pages/deportes_page.dart';
 
 class DrawerComponent extends StatelessWidget {
   final void Function(String, BuildContext) onItemSelected;
@@ -71,6 +77,26 @@ class DrawerComponent extends StatelessWidget {
           case "Prefiesta":
           case "Prefesta":
             targetPage = PrefiestaPage(title: title, index: index);
+            break;
+          case "Viernes 06":
+          case "Divendres 06":
+            targetPage = Day01Page(title: title, index: index);
+            break;
+          case "Sábado 07":
+          case "Dissabte 07":
+            targetPage = Day02Page(title: title, index: index);
+            break;
+          case "Domingo 08":
+          case "Diumenge 08":
+            targetPage = Day03Page(title: title, index: index);
+            break;
+          case "Lunes 09":
+          case "Dilluns 09":
+            targetPage = Day04Page(title: title, index: index);
+            break;
+          case "Deportes":
+          case "Esports":
+            targetPage = DeportesPage(title: title, index: index);
             break;
           default:
             targetPage = Scaffold(
