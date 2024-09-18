@@ -82,11 +82,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 'https://lallagosta.lafesta.cat/img/portada.jpg',
                 width: double.infinity,
                 fit: BoxFit.cover,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) {
+                    return child;
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
               )
             : Image.network(
                 'https://lallagosta.lafesta.cat/img/cartel.jpg',
                 width: double.infinity,
                 fit: BoxFit.cover,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) {
+                    return child;
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
               ),
       ),
     );

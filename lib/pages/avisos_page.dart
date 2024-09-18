@@ -27,7 +27,6 @@ class _AvisosPageState extends State<AvisosPage> {
     }
   }
 
-  // TODO - REVISAR PORQUE HAY DATOS QUE SI SE TRADUCEN Y OTROS NO
   void _onLanguageChanged(String languageCode) {
     setState(() {
       currentLanguage = languageCode;
@@ -48,7 +47,9 @@ class _AvisosPageState extends State<AvisosPage> {
         future: fetchAvisos(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {

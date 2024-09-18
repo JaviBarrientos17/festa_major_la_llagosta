@@ -18,10 +18,6 @@ class _Day01PageState extends State<Day01Page> {
   String baseUrl =
       'https://admin.lallagosta.lafesta.cat/api/v1/ca/actividades/dia/2';
 
-  // TODO - REVISAR QUE TODAS LAS PAGE QUE SE VAYAN CREANDO VAYAN MOSTRANDO LOS DATOS DE LA API CORRECTAMENTE
-  // TODO - MIRAR DE AÑADIR LA LIB DE TRADUCCIONES PARA VER SI SE TRADUCEN TODOS LOS DATOS CORRECTAMENTE
-  // TODO - SI ESO CREAR DOS PAGE POR DIA (UNA PARA LOS DATOS EN CAT Y LA OTRA EN ES) PARA EVITAR PROBLEMAS CON EL LANGUAGE MANAGER O LA LIB DE TRADUCCIONES
-
   Future<List<dynamic>> fetchActivities() async {
     final response = await http.get(Uri.parse(baseUrl));
 
@@ -32,7 +28,6 @@ class _Day01PageState extends State<Day01Page> {
     }
   }
 
-  // TODO - REVISAR PORQUE HAY DATOS QUE SI SE TRADUCEN Y OTROS NO
   void _onLanguageChanged(String languageCode) {
     setState(() {
       currentLanguage = languageCode;

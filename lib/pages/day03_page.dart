@@ -16,7 +16,7 @@ class Day03Page extends StatefulWidget {
 class _Day03PageState extends State<Day03Page> {
   String currentLanguage = 'es';
   String baseUrl =
-      'https://admin.lallagosta.lafesta.cat/api/v1/es/actividades/dia/previos';
+      'https://admin.lallagosta.lafesta.cat/api/v1/dias/6';
 
   Future<List<dynamic>> fetchActivities() async {
     final response = await http.get(Uri.parse(baseUrl));
@@ -28,13 +28,12 @@ class _Day03PageState extends State<Day03Page> {
     }
   }
 
-  // TODO - REVISAR PORQUE HAY DATOS QUE SI SE TRADUCEN Y OTROS NO
   void _onLanguageChanged(String languageCode) {
     setState(() {
       currentLanguage = languageCode;
       baseUrl = languageCode == 'ca'
-          ? 'https://admin.lallagosta.lafesta.cat/api/v1/ca/actividades/dia/previos'
-          : 'https://admin.lallagosta.lafesta.cat/api/v1/es/actividades/dia/previos';
+          ? 'https://admin.lallagosta.lafesta.cat/api/v1/ca/actividades/dia/5'
+          : 'https://admin.lallagosta.lafesta.cat/api/v1/es/actividades/dia/5';
     });
   }
 

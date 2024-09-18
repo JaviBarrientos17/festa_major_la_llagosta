@@ -28,7 +28,6 @@ class _PrefiestaPageState extends State<PrefiestaPage> {
     }
   }
 
-  // TODO - REVISAR PORQUE HAY DATOS QUE SI SE TRADUCEN Y OTROS NO
   void _onLanguageChanged(String languageCode) {
     setState(() {
       currentLanguage = languageCode;
